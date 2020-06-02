@@ -13,10 +13,6 @@ include("testenv.jl")
 tests, net_on, exit_on_error, use_revise, seed = choosetests(ARGS)
 tests = unique(tests)
 
-if use_revise
-    using Revise
-end
-
 const max_worker_rss = if haskey(ENV, "JULIA_TEST_MAXRSS_MB")
     parse(Int, ENV["JULIA_TEST_MAXRSS_MB"]) * 2^20
 else
@@ -85,10 +81,11 @@ cd(@__DIR__) do
 
     if use_revise
         @everywhere begin
+            @eval using Revise
             Revise.track(Core.Compiler)
             Revise.track(Base)
             for (id, mod) in Base.loaded_modules
-                if id.name in STDLIBS
+                if id.name in filter!(x -> isfile(joinpath(Sys.STDLIB, x, "src", "$(x).jl")), readdir(Sys.STDLIB))
                     Revise.track(mod)
                 end
             end
