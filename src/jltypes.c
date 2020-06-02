@@ -1773,7 +1773,7 @@ void jl_init_types(void) JL_GC_DISABLED
     jl_datatype_type->abstract = 0;
     // NOTE: types are not actually mutable, but we want to ensure they are heap-allocated with stable addresses
     jl_datatype_type->mutabl = 1;
-    jl_datatype_type->ninitialized = 3;
+    jl_datatype_type->ninitialized = 1;
     jl_precompute_memoized_dt(jl_datatype_type, 1);
 
     jl_typename_type->name = jl_new_typename_in(jl_symbol("TypeName"), core);
